@@ -58,21 +58,17 @@ buttonClick.onclick = function(){
     let input_personal = parseFloat(document.getElementById('personal').value);
     let input_rental_tools = parseFloat(document.getElementById('rental_tools').value);
     let input_communications = parseFloat(document.getElementById('communications').value);
-    //7
-    let input_estimatedRevenue = parseFloat(document.getElementById('estimatedRevenue').value);
-    let input_plannedCosts = parseFloat(document.getElementById('plannedCosts').value);
-    let input_profitBeforeTax = parseFloat(document.getElementById('profitBeforeTax').value);
-    let input_incomeTax = parseFloat(document.getElementById('incomeTax').value);
-    let input_netProfit = parseFloat(document.getElementById('netProfit').value);
-    let input_costEffectiveness = parseFloat(document.getElementById('costEffectiveness').value);
-    let input_returnOnSales = parseFloat(document.getElementById('returnOnSales').value);
-    //8
+    //страница 8
+    let input_investment = parseFloat(document.getElementById('investment').value);
     let input_durationProject = document.getElementById('durationProject').value;
+    let inflation = parseFloat(document.getElementById('inflation').textContent)
+    let numberRisk = parseFloat(document.getElementById('numberRisk').value);
 
     //РАСЧЕТЫ
     //4
     const revenue = document.getElementById('revenue');
-    revenue.innerHTML = `${input_volumeOfProduction * input_costOfProduction * 12}`;
+    const scoreRevenue = input_volumeOfProduction * input_costOfProduction * 12;
+    revenue.innerHTML = scoreRevenue;
     //5
     const summStartUp = document.getElementById('summStartUp');
     var summ = input_registration + input_duty + input_technic + input_rental + input_marketing + input_workPay + input_furniture + input_consumables + input_personal + input_rental_tools + input_communications;
@@ -102,6 +98,27 @@ buttonClick.onclick = function(){
     const resultExpenses = document.getElementById('resultExpenses');
     resultExpenses.innerHTML = summResultExpenses;
 
+    //7
+    document.getElementById('estimatedRevenue').innerHTML = scoreRevenue;
+    document.getElementById('plannedCosts').innerHTML = summResultExpenses;
+    const scoreProfitBeforeTax =  scoreRevenue - summResultExpenses;
+    document.getElementById('profitBeforeTax').innerHTML = scoreProfitBeforeTax;
+    const scoreIncomeTax = scoreProfitBeforeTax * (name_set/100);
+    document.getElementById('incomeTax').innerHTML = scoreIncomeTax;
+    const scoreNetProfit = scoreProfitBeforeTax - scoreIncomeTax;
+    document.getElementById('netProfit').innerHTML = scoreNetProfit;
+    const scoreCostEffectiveness = (scoreNetProfit/summResultExpenses) * 100
+    document.getElementById('costEffectiveness').innerHTML = scoreCostEffectiveness;
+    const scoreReturnOnSales = (scoreNetProfit/scoreRevenue) * 100
+    document.getElementById('returnOnSales').innerHTML = scoreReturnOnSales;
+    
+    //8
+    const scoreDepreciationCharges = input_investment/input_durationProject;
+    document.getElementById('scoreDepreciationCharges').innerHTML = scoreDepreciationCharges;
+    const scoreDiscounting = inflation + numberRisk;
+    document.getElementById('scoreDiscounting').innerHTML = scoreDiscounting;
+
+
     const data = {
         "name_space" : name_space,
         "name_set" : name_set,
@@ -125,15 +142,15 @@ buttonClick.onclick = function(){
         "laboCosts" : scoreLaboCosts,
         "socialInsurance" : scoreSocialInsurance,
         "depreciationLease" : scoreDepreciationLease,
-        "others" : scoreOthers,
-        "estimatedRevenue": input_estimatedRevenue,
-        "plannedCosts": input_plannedCosts,
-        "profitBeforeTax":input_profitBeforeTax,
-        "incomeTax": input_incomeTax,
-        "netProfit": input_netProfit,
-        "costEffectiveness": input_costEffectiveness,
-        "returnOnSales": input_returnOnSales,
-        "durationProject": input_durationProject
+        "others" : scoreOthers
+        // "estimatedRevenue": input_estimatedRevenue,
+        // "plannedCosts": input_plannedCosts,
+        // "profitBeforeTax":input_profitBeforeTax,
+        // "incomeTax": input_incomeTax,
+        // "netProfit": input_netProfit,
+        // "costEffectiveness": input_costEffectiveness,
+        // "returnOnSales": input_returnOnSales,
+        // "durationProject": input_durationProject
     }
     const table = document.querySelectorAll('.smeta_result').textContent
     console.log(table);
@@ -141,4 +158,4 @@ buttonClick.onclick = function(){
     let results = JSON.stringify(data);
     console.log(results);
     return results;
-}    
+}
